@@ -56,6 +56,8 @@ export default function Login() {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('authToken', data.token);
+                localStorage.setItem('userId', data.userId);
+
                 navigate('../Admin/dashboard') 
                 
             } else {

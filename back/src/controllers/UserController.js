@@ -61,7 +61,6 @@ const deleteById = async (request, response) => {
 }
 
 const createToken = async (request, response) => {
-
     let email = request.body.email;
     let password = request.body.password;
 
@@ -72,16 +71,17 @@ const createToken = async (request, response) => {
         }
     });
 
-    if(!currentUser) {
+    if (!currentUser) {
         return response.status(404).json({
-            message: "Usuario não encontrado"
+            message: "Usuário não encontrado"
         });
     }
 
-    let token = jwt.sign({id: currentUser.id}, process.env.SECRET, {expiresIn: '1h'});
+    let token = jwt.sign({ id: currentUser.id }, process.env.SECRET, { expiresIn: '1h' });
 
-    return response.json({ token })
+    return response.json({ token, userId: currentUser.id });
 }
+
 
 module.exports = {
     list,

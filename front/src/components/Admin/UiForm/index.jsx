@@ -31,7 +31,6 @@ export default function UiForm() {
         setStyleHover,
         hoverEnabled,
         setHoverEnabled,
-        handleSubmit
     } = useContext(Preview);
 
     const validateForm = () => {
@@ -48,18 +47,18 @@ export default function UiForm() {
         if (validateForm()) {
             try {
                 // Supondo que o ID do usuário seja armazenado em uma variável
-                const userId = 1; // Substitua isso pela lógica correta para obter o ID do usuário
+                const userId = localStorage.getItem("userId");
 
                 // Chamada para a API
-                const response = await fetch(`/user/${userId}/uistyle`, {
+                const response = await fetch(`http://localhost:3333/user/${userId}/uistyle`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                     },
                     body: JSON.stringify(uiStyle), // Enviando o estado do estilo da UI
                 });
 
-                // Verifique se a resposta é bem-sucedida
                 if (!response.ok) {
                     throw new Error('Erro ao atualizar o estilo da UI');
                 }

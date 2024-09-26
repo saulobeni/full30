@@ -1,28 +1,39 @@
 const UiStyleModel = require("../models/UiStyleModel");
-const UserModel = require("../models/UserModel");
 
 const updateUiStyle = async (request, response) => {
     const userId = request.params.id; // Captura o ID do usuário da rota
     const body = request.body; // Obtém o corpo da requisição
 
-    // Cria um array de estilos a partir do objeto recebido
-    const updatedStyles = [];
-
     // Itera sobre as chaves do objeto recebido
-    for (const [key, value] of Object.entries(body)) {
-        updatedStyles.push({
-            user_id: userId,
-            attribute: key, // Usando a chave do objeto como atributo
-            value: typeof value === 'object' ? JSON.stringify(value) : value, // Converte para string se for um objeto
-            is_hover: false // Definindo um valor padrão
+    const updatePromises = Object.entries(body).map(async ([key, value]) => {
+        const existingStyle = await UiStyleModel.findOne({
+            where: {
+                user_id: userId,
+                attribute: key
+            }
         });
-    }
+
+        const styleData = {
+            user_id: userId,
+            attribute: key,
+            value: typeof value === 'object' ? JSON.stringify(value) : value,
+            is_hover: false // Definindo um valor padrão
+        };
+
+        if (existingStyle) {
+            // Se o estilo existir, atualiza
+            return existingStyle.update(styleData);
+        } else {
+            // Se não existir, cria um novo
+            return UiStyleModel.create(styleData);
+        }
+    });
 
     try {
-        await UiStyleModel.bulkCreate(updatedStyles, {
-            updateOnDuplicate: ['value', 'is_hover'], // Atualiza valor e hover em caso de duplicata
-        });
+        // Executa todas as promessas de atualização/criação
+        await Promise.all(updatePromises);
 
+        // Busca todos os estilos do usuário após as atualizações
         const result = await UiStyleModel.findAll({ where: { user_id: userId } });
 
         return response.json({ result });
