@@ -1,0 +1,17 @@
+.link-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.link-item {
+    padding: 10px;
+    border: 1px solid;
+    color: #000;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s;
+}

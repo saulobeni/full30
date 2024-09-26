@@ -1,0 +1,9 @@
+.link-list {
+    width: 600px;
+    border: 1px solid;
+    padding: 10px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
