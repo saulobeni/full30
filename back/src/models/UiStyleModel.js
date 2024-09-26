@@ -7,7 +7,7 @@ const UiStyle = connection.define("ui_style", {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: UserModel,
+            model: 'users', // Certifique-se de que o modelo de usuários esteja correto
             key: 'id'
         }
     },
@@ -24,6 +24,12 @@ const UiStyle = connection.define("ui_style", {
         defaultValue: false,
         allowNull: false
     }
+}, {
+    tableName: 'ui_style',
+    timestamps: true, // Isso habilita a criação automática de createdAt e updatedAt
+    createdAt: 'created_at', // Mapeia o campo createdAt do Sequelize para created_at do banco
+    updatedAt: 'updated_at'  // Mapeia o campo updatedAt do Sequelize para updated_at do banco
 });
+
 
 module.exports = UiStyle;

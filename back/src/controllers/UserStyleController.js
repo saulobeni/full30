@@ -5,18 +5,25 @@ const updateUiStyle = async (request, response) => {
     const userId = request.params.id; // Captura o ID do usuário da rota
     const body = request.body; // Obtém o corpo da requisição
 
-    // Adiciona user_id a cada item do corpo
-    const updatedStyles = body.map(item => ({
-        ...item,
-        user_id: userId, 
-    }));
+    // Cria um array de estilos a partir do objeto recebido
+    const updatedStyles = [];
+
+    // Itera sobre as chaves do objeto recebido
+    for (const [key, value] of Object.entries(body)) {
+        updatedStyles.push({
+            user_id: userId,
+            attribute: key, // Usando a chave do objeto como atributo
+            value: typeof value === 'object' ? JSON.stringify(value) : value, // Converte para string se for um objeto
+            is_hover: false // Definindo um valor padrão
+        });
+    }
 
     try {
         await UiStyleModel.bulkCreate(updatedStyles, {
-            updateOnDuplicate: ['attribute', 'value', 'is_hover'],
+            updateOnDuplicate: ['value', 'is_hover'], // Atualiza valor e hover em caso de duplicata
         });
 
-        const result = await UiStyle.findAll({ where: { user_id: userId } });
+        const result = await UiStyleModel.findAll({ where: { user_id: userId } });
 
         return response.json({ result });
     } catch (error) {
@@ -24,6 +31,8 @@ const updateUiStyle = async (request, response) => {
         return response.status(500).json({ error: 'Houve um problema ao atualizar o estilo da UI.' });
     }
 };
+
+
 
 const list = async (request, response) => {
     let userId = request.params.id;
