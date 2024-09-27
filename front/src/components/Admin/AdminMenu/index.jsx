@@ -12,6 +12,9 @@ export default function AdminMenu() {
             <NavLink to="/admin/ui" className="list-group-item list-group-item-action">
                 Ui
             </NavLink>
+            <NavLink to="/1" className="list-group-item list-group-item-action">
+                Links
+            </NavLink>
         </div>  
     );
 }

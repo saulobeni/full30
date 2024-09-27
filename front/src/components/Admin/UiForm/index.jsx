@@ -18,7 +18,7 @@ export default function UiForm() {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setUiStyle({ ...uiStyle, logoImage: reader.result }); // Define a imagem do logo no estado
+                setUiStyle({ ...uiStyle, logoImage: reader.result });
             };
             reader.readAsDataURL(file);
         }
@@ -46,17 +46,17 @@ export default function UiForm() {
         event.preventDefault();
         if (validateForm()) {
             try {
-                // Supondo que o ID do usuário seja armazenado em uma variável
+
                 const userId = localStorage.getItem("userId");
 
-                // Chamada para a API
+
                 const response = await fetch(`http://localhost:3333/user/${userId}/uistyle`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json', 
                         'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                     },
-                    body: JSON.stringify(uiStyle), // Enviando o estado do estilo da UI
+                    body: JSON.stringify(uiStyle),
                 });
 
                 if (!response.ok) {
@@ -65,10 +65,10 @@ export default function UiForm() {
 
                 const data = await response.json();
                 console.log('Estilo da UI atualizado com sucesso:', data);
-                // Aqui você pode adicionar um feedback ao usuário ou redirecioná-lo conforme necessário
+
             } catch (error) {
                 console.error('Erro:', error);
-                setError('Houve um problema ao atualizar o estilo da UI.'); // Mensagem de erro para o usuário
+                setError('Houve um problema ao atualizar o estilo da UI.');
             }
         }
     };

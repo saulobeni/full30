@@ -7,10 +7,11 @@ export default function CreateLinkForm() {
     const [title, setTitle] = useState("");
     const [link, setLink] = useState("");
     const [description, setDescription] = useState("");
-    const [error, setError] = useState(null);  // Para capturar erros
-    const [success, setSuccess] = useState(false);  // Para capturar sucesso
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
 
     let productLinks = storage.getAccountLinks();
+    console.log(productLinks)
 
     const handleSubmit = async (event) => {
         event.preventDefault();

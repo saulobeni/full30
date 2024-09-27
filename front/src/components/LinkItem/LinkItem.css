@@ -6,12 +6,18 @@
 
 .link-item {
     padding: 10px;
-    border: 1px solid;
-    color: #000;
+    border: 1px solid #007bff; 
+    color: #007bff; 
     text-decoration: none;
     display: block;
     width: 100%;
     font-size: 18px;
     font-weight: bold;
     transition: all 0.3s;
+    border-radius: 5px; 
+    background-color: #f8f9fa; 
+}
+
+.link-item:hover {
+    background-color: #e7f1ff;
 }
