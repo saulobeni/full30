@@ -11,6 +11,7 @@ app.use(express.json());
 
 const UserController = require('./controllers/UserController');
 const UserStyleController = require('./controllers/UserStyleController');
+const LinkController = require('./controllers/LinkController');
 const UserAuth = require('./middlewares/UserAuth');
 
 const PrivateRoutes = express.Router();
@@ -27,6 +28,9 @@ PublicRoutes.post('/user/token', UserController.createToken); // Gerar token do 
 
 PrivateRoutes.get('/user/:id/uistyle', UserStyleController.list);
 PrivateRoutes.put('/user/:id/uistyle', UserStyleController.updateUiStyle);
+
+PublicRoutes.post('/link/:id', LinkController.createLink); 
+
 
 app.use(PublicRoutes);
 app.use(PrivateRoutes);

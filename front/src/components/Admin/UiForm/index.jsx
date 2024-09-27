@@ -53,7 +53,7 @@ export default function UiForm() {
                 const response = await fetch(`http://localhost:3333/user/${userId}/uistyle`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json', 
                         'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                     },
                     body: JSON.stringify(uiStyle), // Enviando o estado do estilo da UI
