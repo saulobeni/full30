@@ -1,51 +1,81 @@
-
 import Form from "@/components/Form";
-import {useState} from "react";
+import { useState } from "react";
 import storage from "@/storage";
 
 export default function CreateLinkForm() {
-
-    const [label, setLabel] = useState();
-    const [title, setTitle] = useState();
-    const [link, setLink] = useState();
-    const [description, setDescription] = useState();
+    const [label, setLabel] = useState("");
+    const [title, setTitle] = useState("");
+    const [link, setLink] = useState("");
+    const [description, setDescription] = useState("");
+    const [error, setError] = useState(null);  // Para capturar erros
+    const [success, setSuccess] = useState(false);  // Para capturar sucesso
 
     let productLinks = storage.getAccountLinks();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
-        productLinks.push({
+        const linkData = {
             label,
-            title, 
-            description,
-            link
-        });
+            url: link,
+            title,
+            description
+        };
 
-        storage.setAccountLinks(productLinks);
-    }
+        try {
+            const userId = localStorage.getItem("userId");
+            const response = await fetch(`http://localhost:3333/link/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                },
+                body: JSON.stringify(linkData)
+            });
+
+            if (!response.ok) {
+                throw new Error("Erro ao criar o link");
+            }
+
+            const result = await response.json();
+
+            productLinks.push(result);
+            storage.setAccountLinks(productLinks);
+
+            setSuccess(true);
+            setLabel("");
+            setLink("");
+            setTitle("");
+            setDescription("");
+        } catch (error) {
+            console.error("Erro ao enviar o link:", error);
+            setError(error.message);
+        }
+    };
 
     return (
         <Form method="POST" onSubmit={handleSubmit}>
             <div className="mb-3">
                 <label htmlFor="" className="form-label">Label</label>
-                <input onChange={event => setLabel(event.target.value)} type="text" className="form-control"/>
+                <input value={label} onChange={event => setLabel(event.target.value)} type="text" className="form-control" required />
             </div>
             <div className="mb-3">
                 <label htmlFor="" className="form-label">Link</label>
-                <input onChange={event => setLink(event.target.value)} type="text" className="form-control" />
+                <input value={link} onChange={event => setLink(event.target.value)} type="text" className="form-control" required />
             </div>
             <div className="mb-3">
                 <label htmlFor="" className="form-label">Titulo</label>
-                <input onChange={event => setTitle(event.target.value)} type="text" className="form-control"/>
+                <input value={title} onChange={event => setTitle(event.target.value)} type="text" className="form-control" />
             </div>
             <div className="mb-3">
                 <label htmlFor="" className="form-label">Descrição</label>
-                <textarea onChange={event => setDescription(event.target.value)} className="form-control"></textarea>
+                <textarea value={description} onChange={event => setDescription(event.target.value)} className="form-control"></textarea>
             </div>
             <div>
                 <button className="btn btn-dark w-100">Criar Link</button>
             </div>
+            {error && <p className="text-danger mt-2">{error}</p>}
+            {success && <p className="text-success mt-2">Link criado com sucesso!</p>}
         </Form>
     );
 }
